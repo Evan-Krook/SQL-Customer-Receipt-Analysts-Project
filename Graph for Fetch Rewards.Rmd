@@ -1,0 +1,59 @@
+---
+title: "Modeling Scans Per Month"
+author: "Evan Krook"
+date: "2023-02-23"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE,
+                      error = TRUE, fig.height = 4)
+library(tidyverse)
+library(dplyr)
+library(lubridate)
+```
+
+
+```{r, include = FALSE}
+users = read.csv("users.csv")
+receipts = read.csv('receipts.csv')
+```
+
+
+```{r,include= FALSE}
+Date_Scanned = receipts %>% 
+  filter(REWARDS_RECEIPT_STATUS == 'FINISHED') %>% 
+  select(DATE_SCANNED)
+
+
+
+Date <- Date_Scanned$DATE_SCANNED
+
+Dates <- as.POSIXct(Date)
+
+
+Dates <- data.frame(Dates)
+
+
+months <- separate(Dates, Dates, into = c('year', 'month', 'day')) %>% 
+  select(-day,-year)
+
+```
+
+```{r, echo = FALSE}
+months_summarized <- months %>%
+  arrange(month) %>% 
+  group_by(month) %>% 
+  summarize(n=n())
+
+ggplot(months_summarized, aes(x=month, y=n,fill=n))+
+  geom_col( show.legend = FALSE)+
+  ylim(0,10000)+
+  ylab('Count')+
+  xlab("Month")+
+  ggtitle("Number of Scans Per Month")
+
+
+```
+
+
