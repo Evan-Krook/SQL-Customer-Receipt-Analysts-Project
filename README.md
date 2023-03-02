@@ -1,4 +1,4 @@
-Fetch Rewards Data Analytic Project
+Customer Receipts Data Analytic Project
 
 The Attached Files:
 
